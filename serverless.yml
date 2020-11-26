@@ -1,0 +1,19 @@
+service: redirect-s3-subfolders-lambda-edge
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'prod'}
+  region: us-east-1
+  memorySize: 128
+  versionFunctions: true
+
+functions:
+  redirect-s3-subfolders:
+    handler: src/index.handler
+    description: 'CloudFront as a CDN in front of an S3 bucket - Handler for default file at the root of the site or subdirectories (https://github.com/lfreneda/redirect-s3-subfolders-lambda-edge)'
+    events:
+      - cloudFront:
+        eventType: origin-request
+        pathPattern: /blog*
+        origin: Q.compute-1.amazonaws.com
